@@ -22,12 +22,34 @@ const findUser = async (id) =>{
 
 // LR copies
 app.use("/api/lr", lr_routes)
+
+
+
+
+
+
+
+
 app.post("/addcompany",async (req, res) => {
     const {name} = req.body;
     const id = req.user;
     const userFound =findUser(id);
     if(userFound){
-        const companyAdded = await new companyModel(name);
+        const companyAdded = await new companyModel({name});
+        await companyAdded.save();
+        return res.status(200).json({message: "Company Succefully addded", company: companyAdded})
+    }
+    return res.status(400).json({message: "Error adding company"});
+})
+
+
+app.post("/getcompanies",async (req, res) => {
+    const {name} = req.body;
+    const id = req.user;
+    const userFound =findUser(id);
+    if(userFound){
+        const companyAdded = await new companyModel({name});
+        await companyAdded.save();
         return res.status(200).json({message: "Company Succefully addded", company: companyAdded})
     }
     return res.status(400).json({message: "Error adding company"});
@@ -40,6 +62,7 @@ const startServer  = async () => {
         await mongoose.connect(process.env.MONGO_URI)
         console.log("Connected to MongoDB")
         
+        // start server
         app.listen(process.env.PORT, () => {
             console.log("Server Started at", process.env.PORT);
         });
