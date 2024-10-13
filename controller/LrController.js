@@ -31,6 +31,7 @@ const addLr = async (req, res) => {
 // GET LR
 
 const getLrs = async (req, res) => {
+    
     // const id = req.user;
     // const userFound = findUser(id);
     // if(userFound){

@@ -36,7 +36,7 @@ const registerUser = async (req, res) => {
 
    try {
         const {name, email, password} = req.body;
-        console.log(studioName);
+
         
         const user = await User.findOne({email});
         if(user){
