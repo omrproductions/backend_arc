@@ -2,6 +2,7 @@ const express = require('express')
 const app = express();
 const cors = require('cors')
 const lr_routes = require('./router/lr_routes')
+const user_routes = require('./user/routes')
 // const userRoutes = require('./user/userRoutes');
 // const authenticate = require('./authenticate');
 const companyModel = require('./models/company_model');
@@ -32,29 +33,37 @@ app.use("/api/lr", lr_routes)
 
 app.post("/addcompany",async (req, res) => {
     const {name} = req.body;
-    const id = req.user;
-    const userFound =findUser(id);
-    if(userFound){
+    // const id = req.user;
+    // const userFound =findUser(id);
+    // if(userFound){
+    try {
         const companyAdded = await new companyModel({name});
         await companyAdded.save();
         return res.status(200).json({message: "Company Succefully addded", company: companyAdded})
+    } catch (error) {
+         return res.status(400).json({message: "Error adding company"});
     }
-    return res.status(400).json({message: "Error adding company"});
+
+    // }
+   
 })
 
 
 app.post("/getcompanies",async (req, res) => {
-    const {name} = req.body;
-    const id = req.user;
-    const userFound =findUser(id);
-    if(userFound){
-        const companyAdded = await new companyModel({name});
-        await companyAdded.save();
-        return res.status(200).json({message: "Company Succefully addded", company: companyAdded})
+
+    // const id = req.user;
+    // const userFound =findUser(id);
+    // if(userFound){
+    try {
+        const companies = await companyModel.find();
+        return res.status(200).json({message: "Company Succefully addded", companies})
+    } catch (error) {
+        return res.status(400).json({message: "Error adding company"});
     }
-    return res.status(400).json({message: "Error adding company"});
+
+    // }
 })
-// app.use("/api/user", userRoutes);
+app.use("/api/user", user_routes);
 
 
 const startServer  = async () => {
