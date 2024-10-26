@@ -49,7 +49,7 @@ app.post("/addcompany",async (req, res) => {
 })
 
 
-app.post("/getcompanies",async (req, res) => {
+app.get("/getcompanies",async (req, res) => {
 
     // const id = req.user;
     // const userFound =findUser(id);

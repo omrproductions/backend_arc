@@ -16,21 +16,26 @@ const findUser = async (id) =>{
 
 // ADD LR
 const addLr = async (req, res) => {
+
     const lrDetails = req.body;
-    const id = req.user;
-    const userFound = findUser(id);
-    if(userFound){
-        const lr_Added = await new LRModel(lrDetails);
+    // console.log(lrDetails);
+    
+    // const id = req.user;
+    // const userFound = findUser(id);
+    try{
+        const lr_Added = new LRModel(lrDetails);
         await lr_Added.save();
         return res.status(200).json({message: "LR ADDED", lrDetails:lr_Added })
-    }else{
-        return res.status(400).json({message: "USER NOT FOUND, please register"})
+    }catch(error){
+        return res.status(400).json({error})
     }
 } 
 
 // GET LR
 
 const getLrs = async (req, res) => {
+    const {id} = req.params;
+    console.log(id);
     
     // const id = req.user;
     // const userFound = findUser(id);

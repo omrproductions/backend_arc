@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const LR_Schema = new mongoose.Schema({
+const LR_Schema = new mongoose.Schema(
+  {
   under_company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "companies",
