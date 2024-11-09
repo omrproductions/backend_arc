@@ -2,6 +2,7 @@ const express = require('express')
 const app = express();
 const cors = require('cors')
 const lr_routes = require('./router/lr_routes')
+const billCopy_routes = require('./router/billCopy_routes')
 const user_routes = require('./user/routes')
 // const userRoutes = require('./user/userRoutes');
 // const authenticate = require('./authenticate');
@@ -23,15 +24,10 @@ const findUser = async (id) =>{
 
 // LR copies
 app.use("/api/lr", lr_routes)
+// Bill Copy
+app.use("/api/billcopy", billCopy_routes)
 
-
-
-
-
-
-
-
-app.post("/addcompany",async (req, res) => {
+app.post("/api/addcompany",async (req, res) => {
     const {name} = req.body;
     // const id = req.user;
     // const userFound =findUser(id);

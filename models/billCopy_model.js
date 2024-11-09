@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 
 const billCopy_Schema = mongoose.Schema({
-    company: {
+    under_company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'companies',
         required: true,
@@ -30,7 +30,7 @@ const billCopy_Schema = mongoose.Schema({
         type: String,
         enum: ['consignor', 'consignee']
     }
-}, {times})
+})
 
 
 const billCopyModel = mongoose.model("billCopies", billCopy_Schema);

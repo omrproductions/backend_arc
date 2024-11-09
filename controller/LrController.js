@@ -8,6 +8,7 @@
 
 const companyModel = require("../models/company_model");
 const LRModel = require("../models/Lr_model");
+const { fetch_company_copy } = require("./utils");
 const findUser = async (id) =>{ 
     const userFound = await companyModel.find({_id: id});
     if(userFound) return userFound
@@ -16,12 +17,11 @@ const findUser = async (id) =>{
 
 // ADD LR
 const addLr = async (req, res) => {
-
-    const lrDetails = req.body;
-    // console.log(lrDetails);
+    const {comapnyId} = req.params;
+    let lrDetails = req.body;
+    lrDetails = {...lrDetails, under_company: comapnyId}
+    console.log(lrDetails);
     
-    // const id = req.user;
-    // const userFound = findUser(id);
     try{
         const lr_Added = new LRModel(lrDetails);
         await lr_Added.save();
@@ -32,19 +32,63 @@ const addLr = async (req, res) => {
 } 
 
 // GET LR
-
 const getLrs = async (req, res) => {
-    const {id} = req.params;
-    console.log(id);
+    const {comapnyId} = req.params;
+    console.log(comapnyId);
     
     // const id = req.user;
     // const userFound = findUser(id);
     // if(userFound){
-        const lrsFetched = await LRModel.find({under_company: id});
+        const lrsFetched = await fetch_company_copy(comapnyId, "lr");
+        // console.log(lrsFetched);
+        
         if(lrsFetched) return res.status(200).json({message: "LR fetched", lrsFetched: lrsFetched});
         else return res.status(400).json({message: "Couldn't fetch LR's"});
     // }
 }
 
 
-module.exports = {addLr, getLrs}
+
+
+
+const updateLr = async (req, res) => {
+    const {lrId} = req.params;
+    const updates = req.body;
+    try {
+        const updatedRecord = await LRModel.findByIdAndUpdate(
+            lrId,
+          { $set: updates },
+          { new: true, runValidators: true } 
+        );
+    
+        if (!updatedRecord) {
+          return res.status(404).json({ message: "Record not found" });
+        }
+    
+        res.status(200).json(updatedRecord);
+      } catch (error) {
+        res.status(500).json({ message: "Error updating record", error });
+      }
+}
+
+const deleteLr = async (req, res) => {
+    const {lrid, comapnyId} = req.params;
+    try {
+        console.log(lrid);
+
+        const deletedLr = await LRModel.findByIdAndDelete(lrid) 
+
+        if(!deletedLr) return res.status(404).json({message: "Lr Not found"})
+        const lrsFetched = await fetch_company_copy(comapnyId, "lr");
+        console.log(lrsFetched);
+        return res.status(200).json({message: "Lr Deleted",lrsFetched })
+        
+
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+module.exports = {addLr, getLrs, updateLr, deleteLr}
