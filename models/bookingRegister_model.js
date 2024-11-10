@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 
 const bookingRegisterSchema =new  mongoose.Schema({
-    company: {
+    under_company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'companies',
         required: true,

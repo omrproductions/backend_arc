@@ -3,8 +3,10 @@ const app = express();
 const cors = require('cors')
 const lr_routes = require('./router/lr_routes')
 const billCopy_routes = require('./router/billCopy_routes')
+const bookingRegister_routes = require('./router/bookingRegister_routes');
+const letterPad_routes = require('./router/letterPad_routes')
+
 const user_routes = require('./user/routes')
-// const userRoutes = require('./user/userRoutes');
 // const authenticate = require('./authenticate');
 const companyModel = require('./models/company_model');
 const mongoose = require('mongoose');
@@ -26,6 +28,11 @@ const findUser = async (id) =>{
 app.use("/api/lr", lr_routes)
 // Bill Copy
 app.use("/api/billcopy", billCopy_routes)
+// Booking Register
+app.use("/api/bookingRegister", bookingRegister_routes)
+
+// Letter Pad Routes
+app.use("/api/letterPad", letterPad_routes)
 
 app.post("/api/addcompany",async (req, res) => {
     const {name} = req.body;

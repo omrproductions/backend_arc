@@ -1,7 +1,7 @@
 /**
  * LR COPIES
- * add_billcopy - DONE
- * get_billcopy - DONE
+ * add_billcopy
+ * get_billcopy 
  * update_billcopy 
  * delete_billcopy
  */
@@ -17,22 +17,6 @@ const findUser = async (id) =>{
     else return false;
 }
 
-// ADD Bill Copy
-const add_billcopy = async (req, res) => {
-    const {comapnyId} = req.params;
-    let billcopyDetails = req.body;
-    billcopyDetails = {...billcopyDetails, under_company: comapnyId}
-    console.log(billcopyDetails);
-    
-    try{
-        const billcopy_added = new billCopy_model(billcopyDetails);
-        await billcopy_added.save();
-        return res.status(200).json({message: "Bill Copy ADDED", billcopyDetails:billcopy_added })
-    }catch(error){
-        return res.status(400).json({error})
-    }
-} 
-
 // GET Copy
 const get_billcopy = async (req, res) => {
     const {comapnyId} = req.params;
@@ -43,10 +27,28 @@ const get_billcopy = async (req, res) => {
     // if(userFound){
         const billCopy_Fetched = await  fetch_company_copy(comapnyId, "billCopy");
         
-        if(billCopy_Fetched) return res.status(200).json({message: "Bill Copy fetched", billCopy_Fetched});
+        if(billCopy_Fetched) return res.status(200).json({message: "Bill Copy fetched", content: billCopy_Fetched});
         else return res.status(400).json({message: "Couldn't fetch Bill Copies"});
     // }
 }
+
+
+// ADD Bill Copy
+const add_billcopy = async (req, res) => {
+    const {comapnyId} = req.params;
+    let billcopyDetails = req.body;
+    billcopyDetails = {...billcopyDetails, under_company: comapnyId}
+    console.log(billcopyDetails);
+    
+    try{
+        const billcopy_added = new billCopy_model(billcopyDetails);
+        await billcopy_added.save();
+        return res.status(200).json({message: "Bill Copy ADDED", content:billcopy_added })
+    }catch(error){
+        return res.status(400).json({error})
+    }
+} 
+
 
 // UPDATE BILL COPY
 const update_billcopy = async (req, res) => {
@@ -63,7 +65,7 @@ const update_billcopy = async (req, res) => {
           return res.status(404).json({ message: "Bill Copy not found" });
         }
     
-        return res.status(200).json({message: "Updated Bill copy",updatedRecord});
+        return res.status(200).json({message: "Updated Bill copy",content: updatedRecord});
       } catch (error) {
         res.status(500).json({ message: "Error updating record", error });
       }
@@ -74,11 +76,11 @@ const delete_billcopy = async (req, res) => {
     const {billcopyId, comapnyId} = req.params;
     try {
         console.log(billcopyId);
-        const deletedLr = await billCopy_model.findByIdAndDelete(billcopyId) 
-        if(!deletedLr) return res.status(404).json({message: "Lr Not found"})
-        const lrsFetched =await fetch_company_copy(comapnyId, "billcopy");
-        console.log(lrsFetched);
-        return res.status(200).json({message: "Lr Deleted",lrsFetched })
+        const deleted_billCopy = await billCopy_model.findByIdAndDelete(billcopyId) 
+        if(!deleted_billCopy) return res.status(404).json({message: "Lr Not found"})
+        const billCopy_Fetched =await fetch_company_copy(comapnyId, "billcopy");
+        console.log(billCopy_Fetched);
+        return res.status(200).json({message: "Bill Copy Deleted",content: billCopy_Fetched })
         
 
         
