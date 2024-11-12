@@ -5,6 +5,7 @@ const lr_routes = require('./router/lr_routes')
 const billCopy_routes = require('./router/billCopy_routes')
 const bookingRegister_routes = require('./router/bookingRegister_routes');
 const letterPad_routes = require('./router/letterPad_routes')
+const company_routes = require('./router/company_routes')
 
 const user_routes = require('./user/routes')
 // const authenticate = require('./authenticate');
@@ -13,7 +14,11 @@ const mongoose = require('mongoose');
 // DOTENV
 require('dotenv').config();
 // CORS
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -23,6 +28,11 @@ const findUser = async (id) =>{
     if(userFound) return userFound
     else return false;
 }
+// USER
+app.use("/api/user", user_routes);
+
+// COMPANY
+app.use('/api/company', company_routes)
 
 // LR copies
 app.use("/api/lr", lr_routes)
@@ -34,39 +44,7 @@ app.use("/api/bookingRegister", bookingRegister_routes)
 // Letter Pad Routes
 app.use("/api/letterPad", letterPad_routes)
 
-app.post("/api/addcompany",async (req, res) => {
-    const {name} = req.body;
-    // const id = req.user;
-    // const userFound =findUser(id);
-    // if(userFound){
-    try {
-        const companyAdded = await new companyModel({name});
-        await companyAdded.save();
-        return res.status(200).json({message: "Company Succefully addded", company: companyAdded})
-    } catch (error) {
-         return res.status(400).json({message: "Error adding company"});
-    }
 
-    // }
-   
-})
-
-
-app.get("/getcompanies",async (req, res) => {
-
-    // const id = req.user;
-    // const userFound =findUser(id);
-    // if(userFound){
-    try {
-        const companies = await companyModel.find();
-        return res.status(200).json({message: "Company Succefully addded", companies})
-    } catch (error) {
-        return res.status(400).json({message: "Error adding company"});
-    }
-
-    // }
-})
-app.use("/api/user", user_routes);
 
 
 const startServer  = async () => {
